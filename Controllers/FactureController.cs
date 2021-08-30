@@ -31,13 +31,15 @@ namespace Reporting.Controllers
 
         public IActionResult ByPeriode()
         {
-            var factures = _fcontext.Facture.Where(o => o.Periode.Contains("2020")).Where(c => c.IdClient.Equals(455)).ToList();
+            var factures = _fcontext.Facture.Where(o => o.Periode.Contains("2020")).ToList();
             var groupeResult = factures.GroupBy(o => o.Periode.ToUpper())
                 .ToList()
                 .Select(grp => new
                 {
                     Periode = grp.Key,
+                    MontantTotalC = grp.Where(c => c.IdClient.Equals(455)).Sum(x => x.MontantTotal),
                     MontantTotal = grp.Sum(x => x.MontantTotal)
+
                 })
                 
                 .ToList();
